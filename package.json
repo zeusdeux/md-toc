@@ -17,7 +17,7 @@
     "unified"
   ],
   "author": "Mudit Ameta <zeusdeux@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
     "remark": "^14.0.1",
