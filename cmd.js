@@ -6,13 +6,20 @@ import { remark } from 'remark'
 import remarkToc from 'remark-toc'
 import chalk from 'chalk'
 
-const [inputFile, outputFile] = process.argv.slice(2)
+const [arg1, arg2] = process.argv.slice(2)
 // since we don't have __dirname in modules
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const comment = chalk.dim.grey
+const { version } = JSON.parse(readSync('./package.json'))
+
+if (arg1 === '-v' || arg1 === '--version') {
+  console.log(`md-toc v${version}`)
+  printDebug(version, __dirname, arg1, arg2)
+  process.exit(0)
+}
 
 // TODO: Add support for other options from https://github.com/syntax-tree/mdast-util-toc#options
-if (inputFile === '-h' || inputFile === '--help' || (!inputFile && !outputFile)) {
+if (arg1 === '-h' || arg1 === '--help' || (!arg1 && !arg2)) {
   const md = chalk.grey
   const cmd = chalk.bold.green
   const args = chalk.yellow
@@ -69,12 +76,12 @@ if (inputFile === '-h' || inputFile === '--help' || (!inputFile && !outputFile))
   console.log(md('\t\t### Charlie\n'))
   console.log(md('\t\t## Delta\n'))
 
-  printDebug(__dirname, inputFile, outputFile)
+  printDebug(version, __dirname, arg1, arg2)
   process.exit(0)
 }
 
-const inputFileAbs = resolve(__dirname, inputFile)
-const outputFileAbs = outputFile ? resolve(__dirname, outputFile) : null
+const inputFileAbs = resolve(__dirname, arg1)
+const outputFileAbs = arg2 ? resolve(__dirname, arg2) : null
 const file = readSync(inputFileAbs)
 
 remark()
@@ -88,14 +95,14 @@ remark()
       writeFileSync(outputFileAbs, fileAsString)
     }
   })
-  .finally(() => printDebug(__dirname, inputFile, outputFile, inputFileAbs, outputFileAbs))
+  .finally(() => printDebug(__dirname, arg1, arg2, inputFileAbs, outputFileAbs))
 
-function printDebug(__dirname, arg1, arg2, resolvedInputFilePath, resolvedOutputFilePath) {
+function printDebug(version, __dirname, arg1, arg2, resolvedInputFilePath, resolvedOutputFilePath) {
   if (process.env.DEBUG) {
     const noOfDashes = __dirname.toString().length + 20
     console.log()
     console.log(comment('-'.repeat(noOfDashes)))
-    console.log(chalk.bold.red('DEBUG'))
+    console.log(chalk.bold.red('DEBUG'), comment(`md-toc v${version} | node ${process.version}`))
     console.log('\t__dirname', __dirname)
     console.log('\targ 1', arg1)
     console.log('\targ 2', arg2)
