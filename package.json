@@ -1,0 +1,36 @@
+{
+  "name": "@zeusdeux/md-toc",
+  "version": "1.0.0",
+  "description": "Generate a GitHub compatible table of contents from headings in a markdown file",
+  "bin": {
+    "md-toc": "index.mjs"
+  },
+  "type": "module",
+  "scripts": {},
+  "keywords": [
+    "markdown",
+    "table of contents",
+    "tool",
+    "cli",
+    "toc",
+    "remark",
+    "unified"
+  ],
+  "author": "Mudit Ameta <zeusdeux@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "remark": "^14.0.1",
+    "remark-toc": "^8.0.0",
+    "to-vfile": "^7.2.1"
+  },
+  "engines": {
+    "node": ">=14.x"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "2.3.2"
+  },
+  "main": "cmd.js"
+}
