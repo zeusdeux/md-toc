@@ -51,6 +51,9 @@ if (arg1 === '-h' || arg1 === '--help' || (!arg1 && !arg2)) {
     'write generated markdown to output file path'
   )
   console.log(cmd('\tmd-toc'), args(' --help'), ' - ', 'show this help message')
+  console.log(cmd('\tmd-toc'), args(' --version'), ' - ', 'show tool version')
+  console.log()
+  console.log(comment('\tSet the DEBUG environment variable for debug logs'))
   console.log()
   console.log('EXAMPLE')
   console.log()
