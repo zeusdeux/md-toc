@@ -1,20 +1,18 @@
-import { resolve, dirname } from 'path'
+import { resolve } from 'path'
 import { writeFileSync } from 'fs'
-import { fileURLToPath } from 'url'
 import { readSync } from 'to-vfile'
 import { remark } from 'remark'
 import remarkToc from 'remark-toc'
 import chalk from 'chalk'
 
 const [arg1, arg2] = process.argv.slice(2)
-// since we don't have __dirname in modules
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const cwd = process.cwd()
 const comment = chalk.dim.grey
 const { version } = JSON.parse(readSync('./package.json'))
 
 if (arg1 === '-v' || arg1 === '--version') {
   console.log(`md-toc v${version}`)
-  printDebug(version, __dirname, arg1, arg2)
+  printDebug(version, cwd, arg1, arg2)
   process.exit(0)
 }
 
@@ -79,12 +77,12 @@ if (arg1 === '-h' || arg1 === '--help' || (!arg1 && !arg2)) {
   console.log(md('\t\t### Charlie\n'))
   console.log(md('\t\t## Delta\n'))
 
-  printDebug(version, __dirname, arg1, arg2)
+  printDebug(version, cwd, arg1, arg2)
   process.exit(0)
 }
 
-const inputFileAbs = resolve(__dirname, arg1)
-const outputFileAbs = arg2 ? resolve(__dirname, arg2) : null
+const inputFileAbs = resolve(cwd, arg1)
+const outputFileAbs = arg2 ? resolve(cwd, arg2) : null
 const file = readSync(inputFileAbs)
 
 remark()
@@ -98,7 +96,7 @@ remark()
       writeFileSync(outputFileAbs, fileAsString)
     }
   })
-  .finally(() => printDebug(__dirname, arg1, arg2, inputFileAbs, outputFileAbs))
+  .finally(() => printDebug(cwd, arg1, arg2, inputFileAbs, outputFileAbs))
 
 function printDebug(version, __dirname, arg1, arg2, resolvedInputFilePath, resolvedOutputFilePath) {
   if (process.env.DEBUG) {
