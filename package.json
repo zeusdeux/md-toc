@@ -9,7 +9,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "release": "np",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "echo 'Still gotta write some'"
   },
   "keywords": [
     "markdown",
