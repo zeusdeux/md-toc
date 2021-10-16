@@ -32,7 +32,7 @@
   "engines": {
     "node": ">=14.x",
     "pnpm": ">=6",
-    "npm": ">=7"
+    "npm": ">=6"
   },
   "devDependencies": {
     "@types/node": "^14.17.27",
