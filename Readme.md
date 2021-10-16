@@ -5,16 +5,11 @@ Generate a GitHub compatible table of contents from headings in a markdown file.
 ## Table of contents
 
 - [Motivation](#motivation)
-
 - [Installation](#installation)
-
 - [Usage](#usage)
-
   - [Usage with `lint-staged`](#usage-with-lint-staged)
   - [Usage as a CLI](#usage-as-a-cli)
-
 - [Debugging](#debugging)
-
 - [Contributing](#contributing)
 
 ## Motivation

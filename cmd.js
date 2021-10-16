@@ -128,6 +128,6 @@ cliOpts._.forEach((file) => {
 
 function processFile(fileContents, heading) {
   d(`Processing contents${heading ? ' and generating TOC under ' + heading : ''}`)
-  const options = heading ? { heading } : undefined
+  const options = heading ? { heading, tight: true } : { tight: true }
   return remark().use(remarkToc, options).processSync(fileContents).toString()
 }
