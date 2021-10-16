@@ -52,7 +52,7 @@ It is recommended that you run `prettier` _after_ `md-toc`. For example —
 
     Options:
       -w, --write        Write changes to the input file  [boolean] [default: false]
-      -a, --insertUnder  Heading to insert the table of contents under      [string]
+      -a, --insert-under  Heading to insert the table of contents under      [string]
       -d, --debug        Print debug logs to stderr       [boolean] [default: false]
       -v, --version      Show cli version                                  [boolean]
       -h, --help         Show help                                         [boolean]

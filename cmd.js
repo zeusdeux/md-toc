@@ -56,7 +56,7 @@ const cliOpts = cli
     describe: 'Write changes to the input file',
   })
   .option('a', {
-    alias: 'insertUnder',
+    alias: 'insert-under',
     type: 'string',
     default: undefined,
     describe:
