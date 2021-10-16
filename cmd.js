@@ -1,4 +1,5 @@
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { readFileSync, writeFileSync } from 'fs'
 import { createInterface } from 'readline'
 import { readSync as readToVfileSync } from 'to-vfile'
@@ -13,8 +14,9 @@ const msg = chalk.grey
 const debug = chalk.bold.yellow
 const italic = chalk.italic.dim.grey
 const cwd = process.cwd()
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const cliName = 'md-toc'
-const { version: cliVersion } = JSON.parse(readFileSync('./package.json'))
+const { version: cliVersion } = JSON.parse(readFileSync(resolve(__dirname, './package.json')))
 
 // enabled by --debug flag
 let enableDebug = false
