@@ -121,7 +121,7 @@ cliOpts._.forEach((file) => {
     const start = performance.now()
     writeFileSync(filePath, result)
     const end = performance.now()
-    d(`Wrote ${filePath}`, italic(`${(end - start) / 1000}ms`))
+    d(`Wrote ${filePath}`, italic(`${((end - start) / 1000).toFixed(6)}ms`))
   } else {
     d('Writing to stdout')
     console.log(result)
