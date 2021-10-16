@@ -15,9 +15,9 @@ Generate a GitHub compatible table of contents from headings in a markdown file.
 ## Motivation
 
 I wanted something for myself that does exactly what I need it to do and exposes all the levers that
-I need. Also, I specifically wanted a CLI that I can run in a pre-commit hook (via `husky` +
+I need. Also, I specifically wanted a CLI that can run in a pre-commit hook (via `husky` +
 `lint-staged`) before `prettier --write` for markdown files so that I never have another piece of
-documentation without a table of contents.
+documentation without a table of contents!
 
 ## Installation
 
