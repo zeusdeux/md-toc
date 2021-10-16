@@ -1,0 +1,13 @@
+*
+!.eslintrc.cjs
+!.gitignore
+!.npmignore
+!.nvmrc
+!.prettierrc
+!LICENSE
+!*.md
+!*.js
+!*.mjs
+!*.json
+!*.yaml
+package-*

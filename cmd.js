@@ -1,114 +1,133 @@
 import { resolve } from 'path'
-import { writeFileSync } from 'fs'
-import { readSync } from 'to-vfile'
+import { readFileSync, writeFileSync } from 'fs'
+import { createInterface } from 'readline'
+import { readSync as readToVfileSync } from 'to-vfile'
 import { remark } from 'remark'
 import remarkToc from 'remark-toc'
 import chalk from 'chalk'
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
+import { performance } from 'perf_hooks'
 
-const [arg1, arg2] = process.argv.slice(2)
+const msg = chalk.grey
+const debug = chalk.bold.yellow
+const italic = chalk.italic.dim.grey
 const cwd = process.cwd()
-const comment = chalk.dim.grey
-const { version } = JSON.parse(readSync('./package.json'))
+const cliName = 'md-toc'
+const { version: cliVersion } = JSON.parse(readFileSync('./package.json'))
 
-if (arg1 === '-v' || arg1 === '--version') {
-  console.log(`md-toc v${version}`)
-  printDebug(version, cwd, arg1, arg2)
-  process.exit(0)
-}
-
-// TODO: Add support for other options from https://github.com/syntax-tree/mdast-util-toc#options
-if (arg1 === '-h' || arg1 === '--help' || (!arg1 && !arg2)) {
-  const md = chalk.grey
-  const cmd = chalk.bold.green
-  const args = chalk.yellow
-
-  console.log()
-  console.log(
-    cmd('md-toc'),
-    ' - ',
-    'Generate a GitHub compatible table of contents from headings in a markdown file'
-  )
-  console.log()
-  console.log('\tIt looks for the first heading containing "Table of Contents", "toc" or')
-  console.log('\t"table-of-contents" (case insensitive), removes what it contains until the')
-  console.log('\tnext higher or same level heading is found and adds the generated')
-  console.log('\ttable of contents below it.')
-  console.log()
-  console.log('USAGE')
-  console.log()
-  console.log(
-    cmd('\tmd-toc'),
-    args(' <input file path>'),
-    ' - ',
-    'output generated markdown to stdout'
-  )
-  console.log(
-    cmd('\tmd-toc'),
-    args(' <input file path> <output file path>'),
-    ' - ',
-    'write generated markdown to output file path'
-  )
-  console.log(cmd('\tmd-toc'), args(' --help'), ' - ', 'show this help message')
-  console.log(cmd('\tmd-toc'), args(' --version'), ' - ', 'show tool version')
-  console.log()
-  console.log(comment('\tSet the DEBUG environment variable for debug logs'))
-  console.log()
-  console.log('EXAMPLE')
-  console.log()
-  console.log('\tCOMMAND')
-  console.log(cmd('\t\tmd-toc ../some-folder/Readme.md'))
-  console.log()
-  console.log('\tINPUT')
-  console.log(comment('\t\t// ../some-folder/Readme.md'))
-  console.log(md('\t\t# Alpha\n'))
-  console.log(md('\t\t## Table of Contents\n'))
-  console.log(md('\t\t## Bravo\n'))
-  console.log(md('\t\t### Charlie\n'))
-  console.log(md('\t\t## Delta'))
-  console.log()
-  console.log('\tOUTPUT')
-  console.log(comment('\t\t// output to stdout'))
-  console.log(md('\t\t# Alpha\n'))
-  console.log(md('\t\t## Table of Contents\n'))
-  console.log(md('\t\t-   [Bravo](#bravo)\n'))
-  console.log(md('\t\t\t-   [Charlie](#charlie)\n'))
-  console.log(md('\t\t-   [Delta](#delta)\n'))
-  console.log(md('\t\t## Bravo\n'))
-  console.log(md('\t\t### Charlie\n'))
-  console.log(md('\t\t## Delta\n'))
-
-  printDebug(version, cwd, arg1, arg2)
-  process.exit(0)
-}
-
-const inputFileAbs = resolve(cwd, arg1)
-const outputFileAbs = arg2 ? resolve(cwd, arg2) : null
-const file = readSync(inputFileAbs)
-
-remark()
-  .use(remarkToc)
-  .process(file)
-  .then((file) => {
-    const fileAsString = String(file)
-    if (!outputFileAbs) {
-      console.log(fileAsString)
-    } else {
-      writeFileSync(outputFileAbs, fileAsString)
-    }
-  })
-  .finally(() => printDebug(cwd, arg1, arg2, inputFileAbs, outputFileAbs))
-
-function printDebug(version, __dirname, arg1, arg2, resolvedInputFilePath, resolvedOutputFilePath) {
-  if (process.env.DEBUG) {
-    const noOfDashes = __dirname.toString().length + 20
-    console.log()
-    console.log(comment('-'.repeat(noOfDashes)))
-    console.log(chalk.bold.red('DEBUG'), comment(`md-toc v${version} | node ${process.version}`))
-    console.log('\t__dirname', __dirname)
-    console.log('\targ 1', arg1)
-    console.log('\targ 2', arg2)
-    console.log('\tinput file', resolvedInputFilePath ?? undefined)
-    console.log('\toutput file', resolvedOutputFilePath ?? undefined)
-    console.log(comment('-'.repeat(noOfDashes)))
+// enabled by --debug flag
+let enableDebug = false
+const d = (...args) => {
+  if (enableDebug) {
+    // disagnostic info goes to stderr as specific by POSIX
+    // https://pubs.opengroup.org/onlinepubs/9699919799/functions/stderr.html
+    console.error(debug('Debug:'), msg(...args))
   }
+}
+
+const cli = yargs(hideBin(process.argv))
+// options: --write --help --debug --insertUnder --version
+// commands: completion for bash/zsh completion
+const cliOpts = cli
+  .scriptName(cliName)
+  .command('$0')
+  .usage('Usage: $0 [options] <file or stdin>')
+  .example([
+    [
+      '$0 --write Readme.md',
+      'Generate a table of contents from headings in Readme.md, insert them under a heading name "Table of Contents", "toc" or "table-of-contents" (all case insensitive) in Readme.md and write the file to disk',
+    ],
+    [
+      '$0 Readme.md',
+      'Same as the --write option but the output is written to stdout and Readme.md is left as is',
+    ],
+    [
+      '$0 -a "Contents" -w Readme.md',
+      'Same as --write but the table of contents is inserted under the first heading named "Contents"',
+    ],
+  ])
+  .option('w', {
+    alias: 'write',
+    boolean: true,
+    default: false,
+    describe: 'Write changes to the input file',
+  })
+  .option('a', {
+    alias: 'insertUnder',
+    type: 'string',
+    default: undefined,
+    describe:
+      'Heading to insert the table of contents under. Defaults to table of contents|toc|table-of-contents',
+  })
+  .option('d', {
+    alias: 'debug',
+    boolean: true,
+    default: false,
+    describe: 'Print debug logs to stderr',
+  })
+  .version('v', 'Show cli version', `v${cliVersion}`)
+  .alias('v', 'version')
+  .help('h')
+  .alias('h', 'help').argv
+
+if (cliOpts.debug) {
+  enableDebug = true
+}
+
+d(`${cliName} version`, `v${cliVersion}`)
+d(
+  'Input options',
+  JSON.stringify(
+    {
+      ...cliOpts,
+    },
+    null,
+    4
+  )
+)
+d('-'.repeat(80))
+
+if (!cliOpts._.length) {
+  d(
+    `No file specified. Reading from stdin as utf-8${
+      cliOpts.write ? ' and disregarding --write' : ''
+    }`
+  )
+  let input = ''
+  const rl = createInterface({
+    input: process.stdin,
+  })
+  for await (const line of rl) {
+    input += line
+    input += '\n'
+  }
+  const result = processFile(input, cliOpts.insertUnder)
+  d('Dumping output to stdout')
+  console.log(result)
+  process.exit(0)
+}
+
+cliOpts._.forEach((file) => {
+  const filePath = resolve(cwd, file)
+  d(`Reading file ${filePath}`)
+  const fileContents = readToVfileSync(filePath)
+  // process file
+  const result = processFile(fileContents, cliOpts.insertUnder)
+  // call fn
+  if (cliOpts.write) {
+    const start = performance.now()
+    writeFileSync(filePath, result)
+    const end = performance.now()
+    d(`Wrote ${filePath}`, italic(`${(end - start) / 1000}ms`))
+  } else {
+    d('Writing to stdout')
+    console.log(result)
+  }
+})
+
+function processFile(fileContents, heading) {
+  d(`Processing contents${heading ? ' and generating TOC under ' + heading : ''}`)
+  const options = heading ? { heading } : undefined
+  return remark().use(remarkToc, options).processSync(fileContents).toString()
 }
