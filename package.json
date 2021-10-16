@@ -1,6 +1,6 @@
 {
   "name": "@zeusdeux/md-toc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generate a GitHub compatible table of contents from headings in a markdown file",
   "bin": {
     "md-toc": "index.mjs"
