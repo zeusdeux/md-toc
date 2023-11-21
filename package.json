@@ -1,14 +1,15 @@
 {
   "name": "@zeusdeux/md-toc",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Generate a GitHub compatible table of contents from headings in a markdown file",
   "bin": {
-    "md-toc": "index.mjs"
+    "md-toc": "./index.mjs"
   },
   "type": "module",
   "scripts": {
     "release": "np",
     "prepare": "husky install",
+    "type-check": "tsc --project .",
     "test": "echo 'Still gotta write some'"
   },
   "keywords": [
@@ -35,6 +36,7 @@
     "npm": ">=6"
   },
   "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
     "@types/node": "^14.17.27",
     "@types/yargs": "^17.0.4",
     "eslint": "^8.0.1",
@@ -42,12 +44,16 @@
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3",
     "np": "^7.5.0",
-    "prettier": "2.4.1"
+    "prettier": "2.4.1",
+    "typescript": "^5.3.2"
   },
   "main": "cmd.js",
   "lint-staged": {
     "*.{js,cjs,mjs}": "eslint --cache --fix",
-    "*.md": "md-toc --write",
-    "*.{js,cjs,mjs,json,yaml,md}": "prettier --write"
+    "*.md": [
+      "md-toc --write",
+      "prettier --write"
+    ],
+    "*.{js,cjs,mjs,json,yaml}": "prettier --write"
   }
 }
