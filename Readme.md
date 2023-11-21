@@ -41,34 +41,33 @@ It is recommended that you run `prettier` _after_ `md-toc`. For example —
 
 ```json
 "lint-staged": {
-  "*.md": "md-toc --write",
-  "*.{js,cjs,mjs,ts,json,yaml,md}": "prettier --write"
+  "*.md": ["md-toc --write", "prettier --write"],
 }
 ```
 
 ### Usage as a CLI
 
-    Usage: md-toc [options] <file or stdin>
+    md-toc
+
+    Usage: $0 [options] <file or stdin>
 
     Options:
-      -w, --write        Write changes to the input file  [boolean] [default: false]
-      -a, --insert-under Heading to insert the table of contents under      [string]
-      -d, --debug        Print debug logs to stderr       [boolean] [default: false]
-      -v, --version      Show cli version                                  [boolean]
-      -h, --help         Show help                                         [boolean]
+      -d, --debug        Print debug logs to stderr                 [boolean] [default: false]
+      -v, --version      Show cli version                                            [boolean]
+      -h, --help         Show help                                                   [boolean]
+      -w, --write        Write changes to the input file            [boolean] [default: false]
+      -a, --insertUnder  Heading to insert the table of contents under. Defaults to table of c
+                         ontents|toc|table-of-contents                  [string] [default: ""]
 
     Examples:
-      md-toc --write Readme.md           Generate a table of contents from headings
-                                         in Readme.md, insert them under a heading
-                                         name "Table of Contents", "toc" or
-                                         "table-of-contents" (all case insensitive)
-                                         in Readme.md and write the file to disk
-      md-toc Readme.md                   Same as the --write option but the output
-                                         is written to stdout and Readme.md is left
-                                         as is
-      md-toc -a "Contents" -w Readme.md  Same as --write but the table of contents
-                                         is inserted under the first heading named
-                                         "Contents"
+      md-toc --write Readme.md           Generate a table of contents from headings in Readme.
+                                         md, insert them under a heading name "Table of Conten
+                                         ts", "toc" or "table-of-contents" (all case insensiti
+                                         ve) in Readme.md and write the file to disk.
+      md-toc Readme.md                   Same as the --write option but the output is written
+                                         to stdout and Readme.md is left as is.
+      md-toc -a "Contents" -w Readme.md  Same as --write but the table of contents is inserted
+                                          under the first heading named "Contents".
 
 ## Debugging
 
