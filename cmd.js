@@ -1,8 +1,8 @@
 // @ts-check
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { readFileSync, writeFileSync } from 'fs'
-import { createInterface } from 'readline'
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { createInterface } from 'node:readline'
 import { readSync as readToVfileSync } from 'to-vfile'
 import { remark } from 'remark'
 import remarkToc from 'remark-toc'
@@ -10,7 +10,7 @@ import chalk from 'chalk'
 import yargs from 'yargs'
 // @ts-ignore
 import { hideBin } from 'yargs/helpers'
-import { performance } from 'perf_hooks'
+import { performance } from 'node:perf_hooks'
 
 const msg = chalk.grey
 const debug = chalk.bold.yellow
