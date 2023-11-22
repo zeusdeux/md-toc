@@ -4,6 +4,12 @@
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "allowJs": true,
-    "noEmit": true
+    "checkJs": true,
+    "noEmit": true,
+
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   }
 }
