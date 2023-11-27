@@ -7,7 +7,6 @@
 !LICENSE
 !*.md
 !*.js
-!*.mjs
 !*.json
 !*.yaml
 package-*
