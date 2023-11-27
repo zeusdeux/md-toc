@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "description": "Generate a GitHub compatible table of contents from headings in a markdown file",
   "bin": {
-    "md-toc": "./index.mjs"
+    "md-toc": "./cmd.js"
   },
   "type": "module",
   "scripts": {
