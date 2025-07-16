@@ -23,7 +23,10 @@ const { version: cliVersion } = JSON.parse(
   readFileSync(resolve(__dirname, './package.json'), { encoding: 'utf8' })
 )
 
-// enabled by --debug flag
+/**
+ * @type {boolean}
+ * enabled by --debug flag
+ */
 let enableDebug = false
 
 /**
